@@ -1,7 +1,6 @@
 import pandas as pd
 from pandas import Series
 from pandas_datareader import data as pda
-import numpy as np
 
 class Stock:
     def __init__(self, stock_id, start_date = None, end_date = None):
