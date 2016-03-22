@@ -28,59 +28,56 @@
    THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
-# -*- coding: utf-8 -*-
-
 from TechnicalAnalysis import Stock
+from Backtesting import BandTest
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
-	# 建立股票資訊連結(股票代碼，起始時間，結束時間)
-	# s = Stock('2330')
-	# s = Stock('2330', '10/31/2015')
+
+	# 建立股票資訊連結以及將資訊丟入回測程式
 	s = Stock('2330', '10/31/2015', '03/05/2016')
+	bt = BandTest(s)
 
 	# 取得歷史股價
 	history = s.history()
-	print("歷史收盤價")
-	print(history['Adj Close'])
 
-	# 取得均線值(預設週期為5日)
-	# ma = s.MA(5)
-	ma = s.MA()
-	history['MA5'] = ma
+	# 範例策略一
+	# 在歷史股價內新增K, D兩個值的欄位
+	history['K'], history['D'] = s.KD()
 
-	# 取得KD值(預設週期為9日)
-	# k, d = s.KD(9)
-	k, d = s.KD()
-	history['K'] = k
-	history['D'] = d
+	# 撰寫個人策略 => def 名稱自取(今日, 今日資訊, 股票資訊)
+	def golden_cross(today, today_data, stock):
+		# 回傳資訊為 True = 持有狀態, False = 非持有狀態
+		return today_data['K'] > today_data['D']
 
-	# 取得MACD值(預設短週期為12日，長週期為26日，DIF平滑區間為9日)
-	# 詳情可至維基百科查詢 https://zh.wikipedia.org/wiki/MACD
-	# dif, dem, osc = s.MACD(12, 26, 9)
-	dif, dem, osc = s.MACD()
-	history['DIF'] = dif
-	history['DEM'] = dem
-	history['OSC'] = osc
-	
-	# 取得乖離率(預設週期為10日)
-	# bias = s.BIAS(10)
-	bias = s.BIAS()
-	history['BIAS'] = bias
+	# 將策略新增至回測程式中並取名
+	bt.addStrategy('KD黃金交叉', golden_cross)
 
-	print("歷史股價及技術線圖表")
-	print(history)
+	# 範例策略二
+	history['MA5'] = s.MA()
+	history['MA20'] = s.MA(20)
 
-	# 繪製技術線型
+	def average_cross(today, today_data, stock):
+		return today_data['MA5'] > today_data['MA20']
+
+	bt.addStrategy('均線黃金交叉', average_cross)
+
+	# 範例策略三
+	history['DIF'], history['DEM'],  history['OSC']= s.MACD()
+
+	def macd_cross(today, today_data, stock):
+		# 可調整today並透過stock取得其他日的資訊
+		yesterday = today - 1
+		yesterday_data = stock.getData(yesterday)
+
+		return (today_data['DIF'] > today_data['DEM']) & \
+			(yesterday_data['DIF'] > yesterday_data['DEM'])
+
+	bt.addStrategy('MACD連續兩日黃金交叉', average_cross)
+
+	# 繪製回測結果 (縱軸為資產倍率)
 	plt.figure(figsize=(8,4))
 
-	# ma.plot()
-	k.plot()
-	d.plot()
-	# dif.plot()
-	# dem.plot()
-	# osc.plot.bar()
-	# bias.plot()
+	bt.plot()
 
 	plt.show()
-
