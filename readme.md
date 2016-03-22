@@ -1,18 +1,18 @@
 # 股市技術分析小工具
-====================
+
 對於目前在python好像還沒找到一個適合作為股市技術分析的套件，所以決定先刻一份簡單的工具頂著用。   
 目前已新增簡易的波段回測投報率線圖，參考自[幣圖誌](http://www.bituzi.com/2014/12/Rbacktest6mins.html)
 
 ![範例快照](example_screenshot.png)
 
 # 套件需求
-====================
+
 matplotlib >= 1.5.1   
 pandas >= 0.18.0   
 pandas-datareader >= 0.2.0   
 
 # 使用說明
-====================
+
 基本技術線圖的取得請參考範例程式 example.py   
 $ python example.py   
 
@@ -25,7 +25,7 @@ def strategy(today, today_data, stock):
 $ python example_backtesting.py   
 
 # 授權協議 BSD License
-=====================
+
 Copyright (c) 2016, finance4py team   
 All rights reserved.   
 
