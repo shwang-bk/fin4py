@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
  * finance4py
  * Based on Python Data Analysis Library.

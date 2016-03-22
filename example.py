@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
  * finance4py
  * Based on Python Data Analysis Library.
@@ -27,8 +28,6 @@
    IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF 
    THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
-
-# -*- coding: utf-8 -*-
 
 from TechnicalAnalysis import Stock
 import matplotlib.pyplot as plt
@@ -68,19 +67,30 @@ if __name__ == '__main__':
 	bias = s.BIAS()
 	history['BIAS'] = bias
 
+	# 取得布林通道值(預設週期為20日, 通道倍率為2倍)
+	# top_line, bottom_line, band_width = s.BBand(20, 2)
+	top_line, bottom_line, band_width = s.BBand()
+	history['BTOP'] = top_line
+	history['BBOTTOM'] = bottom_line
+	history['BWIDTH'] = band_width
+
 	print("歷史股價及技術線圖表")
 	print(history)
 
 	# 繪製技術線型
 	plt.figure(figsize=(8,4))
 
+	history['Adj Close'].plot()
 	# ma.plot()
-	k.plot()
-	d.plot()
+	# k.plot()
+	# d.plot()
 	# dif.plot()
 	# dem.plot()
 	# osc.plot.bar()
 	# bias.plot()
+	top_line.plot()
+	bottom_line.plot()
+	# band_width.plot()
 
 	plt.show()
 
