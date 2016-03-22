@@ -73,7 +73,7 @@ if __name__ == '__main__':
 		return (today_data['DIF'] > today_data['DEM']) & \
 			(yesterday_data['DIF'] > yesterday_data['DEM'])
 
-	bt.addStrategy('MACD連續兩日黃金交叉', average_cross)
+	bt.addStrategy('MACD連續兩日黃金交叉', macd_cross)
 
 	# 繪製回測結果 (縱軸為資產倍率)
 	plt.figure(figsize=(8,4))

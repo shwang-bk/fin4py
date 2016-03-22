@@ -103,3 +103,6 @@ class Stock:
     def BIAS(self, window = 10):
         ma = self.MA(window)
         return (self.df['Adj Close'] - ma) / ma * 100
+    
+    def getData(self, i):
+        return self.df.iloc[i]
