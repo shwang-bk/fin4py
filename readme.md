@@ -21,7 +21,7 @@ pandas-datareader >= 0.2.0
 * 回測程式部分可自行定義以下函式處理自己的策略並交給回測程式處理即可
   ```python
   def strategy(today, today_data, stock):
-  	return
+      return
   ```
   詳情請參考範例程式 example_backtesting.py
   ```sh
