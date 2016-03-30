@@ -13,24 +13,20 @@ pandas-datareader >= 0.2.0
 
 使用說明
 ======================
-基本技術線圖的取得請參考範例程式 example.py
+* 基本技術線圖的取得請參考範例程式 example.py
+  ```sh
+  $ python example.py
+  ```
 
-```sh
-$ python example.py
-```
-
-回測程式部分可自行定義以下函式處理自己的策略並交給回測程式處理即可
-
-```python
-def strategy(today, today_data, stock):
-	return
-```
-
-詳情請參考範例程式 example_backtesting.py
-
-```sh
-$ python example_backtesting.py   
-```
+* 回測程式部分可自行定義以下函式處理自己的策略並交給回測程式處理即可
+  ```python
+  def strategy(today, today_data, stock):
+  	return
+  ```
+  詳情請參考範例程式 example_backtesting.py
+  ```sh
+  $ python example_backtesting.py   
+  ```
 
 授權協議 BSD License
 ======================
