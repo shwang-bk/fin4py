@@ -61,6 +61,9 @@ class Stock:
     def MA(self, window = 5):
         return self.df['Adj Close'].rolling(window, center=False).mean()
 
+    def MA_Volume(self, window = 5):
+        return self.df['Volume'].rolling(window, center=False).mean()
+
     def KD(self, window = 9):
         df_min = self.df['Low'].rolling(window, center=False).min()
         df_max = self.df['High'].rolling(window, center=False).max()
