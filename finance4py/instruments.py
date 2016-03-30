@@ -104,6 +104,16 @@ class Stock:
     def BIAS(self, window = 10):
         ma = self.MA(window)
         return (self.df['Adj Close'] - ma) / ma * 100
+
+    def BBand(self, window = 20, band = 2):
+        ma = self.MA(window)
+        stdiv = self.df['Adj Close'].rolling(window).std()
+        
+        top = ma + band * stdiv
+        bottom = ma - band * stdiv
+        width = band * 2 * stdiv / self.df['Adj Close']
+        
+        return top, bottom, width
     
     def getData(self, i):
         return self.df.iloc[i]
