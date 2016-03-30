@@ -29,56 +29,23 @@
    THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
-from finance4py import Stock
-from finance4py.backtesting import BandTest
-import matplotlib.pyplot as plt
+from pandas import DataFrame
+from pandas import Series
+import numpy as np
 
-if __name__ == '__main__':
+class BandTest:
+    def __init__(self, stock):
+        self.stock = stock
+        self.df = stock.df
+        self.i_table = DataFrame(index = self.df.index)
+        
+    def addStrategy(self, name, strategy):
+        signals = [(1 if strategy(i, self.df.iloc[i], self.stock) else 0) for i in range(self.df['Adj Close'].count())]
+        signal = Series(signals, self.df.index)
 
-	# 建立股票資訊連結以及將資訊丟入回測程式
-	s = Stock('2330', '10/31/2015', '03/05/2016')
-	bt = BandTest(s)
-
-	# 取得歷史股價
-	history = s.history()
-
-	# 範例策略一
-	# 在歷史股價內新增K, D兩個值的欄位
-	history['K'], history['D'] = s.KD()
-
-	# 撰寫個人策略 => def 名稱自取(今日, 今日資訊, 股票資訊)
-	def golden_cross(today, today_data, stock):
-		# 回傳資訊為 True = 持有狀態, False = 非持有狀態
-		return today_data['K'] > today_data['D']
-
-	# 將策略新增至回測程式中並取名
-	bt.addStrategy('KD黃金交叉', golden_cross)
-
-	# 範例策略二
-	history['MA5'] = s.MA()
-	history['MA20'] = s.MA(20)
-
-	def average_cross(today, today_data, stock):
-		return today_data['MA5'] > today_data['MA20']
-
-	bt.addStrategy('均線黃金交叉', average_cross)
-
-	# 範例策略三
-	history['DIF'], history['DEM'],  history['OSC']= s.MACD()
-
-	def macd_cross(today, today_data, stock):
-		# 可調整today並透過stock取得其他日的資訊
-		yesterday = today - 1
-		yesterday_data = stock.getData(yesterday)
-
-		return (today_data['DIF'] > today_data['DEM']) & \
-			(yesterday_data['DIF'] > yesterday_data['DEM'])
-
-	bt.addStrategy('MACD連續兩日黃金交叉', macd_cross)
-
-	# 繪製回測結果 (縱軸為資產倍率)
-	plt.figure(figsize=(8,4))
-
-	bt.plot()
-
-	plt.show()
+        close = self.df['Adj Close']
+        unit_income = np.log(close / close.shift(1)) * signal.shift(1)
+        self.i_table[name] = np.exp(unit_income.cumsum())
+        
+    def plot(self):
+        self.i_table.plot()

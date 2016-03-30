@@ -29,7 +29,7 @@
    THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
-from TechnicalAnalysis import Stock
+from finance4py import Stock
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
@@ -40,7 +40,7 @@ if __name__ == '__main__':
 
 	# 取得歷史股價
 	history = s.history()
-	print("歷史收盤價")
+	print('歷史收盤價')
 	print(history['Adj Close'])
 
 	# 取得均線值(預設週期為5日)
@@ -74,7 +74,7 @@ if __name__ == '__main__':
 	history['BBOTTOM'] = bottom_line
 	history['BWIDTH'] = band_width
 
-	print("歷史股價及技術線圖表")
+	print('歷史股價及技術線圖表')
 	print(history)
 
 	# 繪製技術線型
