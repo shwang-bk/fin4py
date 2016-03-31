@@ -28,32 +28,42 @@
    IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF 
    THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
-
+import datetime
 import pandas as pd
+import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
+
 from pandas import Series
 from pandas_datareader import data as pda
+from matplotlib.dates import date2num
+from matplotlib.dates import num2date
+from matplotlib.finance import candlestick_ochl
+from matplotlib.finance import volume_overlay3
 
 class Stock:
     def __init__(self, stock_id, start_date = None, end_date = None):
         self.df = None
         
         try:
-            self.df = pda.get_data_yahoo(stock_id, start_date, end_date)
+            self.df = pda.get_data_yahoo(stock_id + u'.TW', start_date, end_date)
         except:
             pass
         
         if self.df is None:
             try:
-                self.df = pda.get_data_yahoo(stock_id + u'.TW', start_date, end_date)
+                self.df = pda.get_data_yahoo(stock_id + u'.TWO', start_date, end_date)
             except:
                 pass
             
         if self.df is None:
             try:
-                self.df = pda.get_data_yahoo(stock_id + u'.TWO', start_date, end_date)
+                self.df = pda.get_data_yahoo(stock_id, start_date, end_date)
             except:
                 print("KEY_ERROR: Wrong stock id.")
                 raise
+
+        self.df = self.df[self.df.Volume != 0]
 
     def __getitem__(self, key):
         return self.df[key]
@@ -126,3 +136,41 @@ class Stock:
     
     def getData(self, i):
         return self.df.iloc[i]
+
+    def plot(self):
+        fig = plt.figure()
+        ax = fig.add_subplot(1,1,1)
+        timestemps = self.df.index.date
+        candlesticks = zip(date2num(timestemps), self.df['Open'], self.df['Adj Close'],
+            self.df['High'], self.df['Low'], self.df['Volume'])
+        candlestick_ochl(ax, candlesticks,width=1,colorup='r', colordown='g')
+
+        pad = 0.25
+        yl = ax.get_ylim()
+        ax.set_ylim(yl[0]-(yl[1]-yl[0])*pad,yl[1])
+
+        #ax2 = ax.twinx()
+        #ax2.set_position(matplotlib.transforms.Bbox([[0.125,0.1],[0.9,0.32]]))
+
+        #dates = [x[0] for x in candlesticks]
+        #dates = np.asarray(dates)
+        #volume = [x[5] for x in candlesticks]
+        #volume = np.asarray(volume)
+
+        #pos = self.df['Open']-self.df['Adj Close']<0
+        #neg = self.df['Open']-self.df['Adj Close']>0
+        #ax2.bar(dates[pos],volume[pos],color='green',width=1,align='center')
+        #ax2.bar(dates[neg],volume[neg],color='red',width=1,align='center')
+
+        #ax2.set_xlim(min(dates),max(dates))
+
+        #yticks = ax2.get_yticks()
+        #ax2.set_yticks(yticks[::3])
+
+        #ax2.yaxis.set_label_position("right")
+        #ax2.set_ylabel('Volume', size=20)
+
+        xt = ax.get_xticks()
+        new_xticks = [datetime.date.isoformat(num2date(d)) for d in xt]
+        ax.set_xticklabels(new_xticks,rotation=45, horizontalalignment='right')
+        plt.show()
