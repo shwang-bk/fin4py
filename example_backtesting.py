@@ -39,12 +39,9 @@ if __name__ == '__main__':
 	s = Stock('2330', '10/31/2015', '03/05/2016')
 	bt = BandTest(s)
 
-	# 取得歷史股價
-	history = s.history()
-
 	# 範例策略一
 	# 在歷史股價內新增K, D兩個值的欄位
-	history['K'], history['D'] = s.KD()
+	s['K'], s['D'] = s.KD()
 
 	# 撰寫個人策略 => def 名稱自取(今日, 今日資訊, 股票資訊)
 	def golden_cross(today, today_data, stock):
@@ -55,8 +52,8 @@ if __name__ == '__main__':
 	bt.addStrategy('KD黃金交叉', golden_cross)
 
 	# 範例策略二
-	history['MA5'] = s.MA()
-	history['MA20'] = s.MA(20)
+	s['MA5'] = s.MA()
+	s['MA20'] = s.MA(20)
 
 	def average_cross(today, today_data, stock):
 		return today_data['MA5'] > today_data['MA20']
@@ -64,7 +61,7 @@ if __name__ == '__main__':
 	bt.addStrategy('均線黃金交叉', average_cross)
 
 	# 範例策略三
-	history['DIF'], history['DEM'],  history['OSC']= s.MACD()
+	s['DIF'], s['DEM'],  s['OSC']= s.MACD()
 
 	def macd_cross(today, today_data, stock):
 		# 可調整today並透過stock取得其他日的資訊

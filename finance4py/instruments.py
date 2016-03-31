@@ -54,9 +54,15 @@ class Stock:
             except:
                 print("KEY_ERROR: Wrong stock id.")
                 raise
-                
-    def history(self):
-        return self.df
+
+    def __getitem__(self, key):
+        return self.df[key]
+
+    def __setitem__(self, key, value):
+        self.df[key] = value
+
+    def __repr__(self):
+        return repr(self.df)
     
     def MA(self, window = 5):
         return self.df['Adj Close'].rolling(window, center=False).mean()
