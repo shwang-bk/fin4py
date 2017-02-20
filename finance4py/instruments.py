@@ -38,8 +38,6 @@ from pandas import Series
 from pandas_datareader import data as pda
 from matplotlib.dates import date2num
 from matplotlib.dates import num2date
-from matplotlib.finance import candlestick_ochl
-from matplotlib.finance import volume_overlay3
 
 class Stock:
     def __init__(self, stock_id, start_date = None, end_date = None):
