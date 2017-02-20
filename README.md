@@ -13,9 +13,9 @@ pandas-datareader >= 0.2.0
 
 使用說明
 ======================
-* 安裝程式請直接使用 setup.py
+* 安裝程式請直接使用 pip
   ```sh
-  python setup.py install
+  pip install finance4py
   ```
   
 * 基本技術線圖的取得請參考範例程式 example.py（on [Github](https://github.com/m10215059/finance4py)）

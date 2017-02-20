@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name='finance4py',
-      version='0.1',
+      version='0.2',
       description='finance analysis and backtesting tools in python',
       author='Sheng-Huai Wang',
       author_email='m10215059@csie.ntust.edu.tw',
