@@ -30,7 +30,7 @@
 '''
 
 from finance4py import Stock
-import matplotlib.pyplot as plt
+from pylab import *
 
 if __name__ == '__main__':
 	# 建立股票資訊連結(股票代碼，起始時間，結束時間)
@@ -77,7 +77,6 @@ if __name__ == '__main__':
 	print(s)
 
 	# 繪製技術線型
-	plt.figure(figsize=(8,4))
 
 	s['Adj Close'].plot()
 	# ma.plot()
@@ -91,5 +90,5 @@ if __name__ == '__main__':
 	bottom_line.plot()
 	# band_width.plot()
 
-	plt.show()
+	show()
 

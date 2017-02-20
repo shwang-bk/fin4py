@@ -31,7 +31,7 @@
 
 from finance4py import Stock
 from finance4py.backtesting import BandTest
-import matplotlib.pyplot as plt
+from pylab import *
 
 if __name__ == '__main__':
 
@@ -74,8 +74,6 @@ if __name__ == '__main__':
 	bt.addStrategy('MACD連續兩日黃金交叉', macd_cross)
 
 	# 繪製回測結果 (縱軸為資產倍率)
-	plt.figure(figsize=(8,4))
-
 	bt.plot()
 
-	plt.show()
+	show()

@@ -18,7 +18,7 @@ pandas-datareader >= 0.2.0
   python setup.py install
   ```
   
-* 基本技術線圖的取得請參考範例程式 example.py
+* 基本技術線圖的取得請參考範例程式 example.py（on [Github](https://github.com/m10215059/finance4py)）
   ```sh
   python example.py
   ```
@@ -28,7 +28,7 @@ pandas-datareader >= 0.2.0
   def strategy(today, today_data, stock):
       return
   ```
-  詳情請參考範例程式 example_backtesting.py
+  詳情請參考範例程式 example_backtesting.py（on [Github](https://github.com/m10215059/finance4py)）
   ```sh
   python example_backtesting.py   
   ```
