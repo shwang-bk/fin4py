@@ -33,13 +33,17 @@ import pandas as pd
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
+import matplotlib.dates as dates
 
 from pandas import Series
 from pandas_datareader import data as pda
+
 from matplotlib.dates import date2num
 from matplotlib.dates import num2date
+from matplotlib.patches import Rectangle
+from matplotlib.lines import Line2D
 
-class Stock:
+class Stock(object):
     def __init__(self, stock_id, start_date = None, end_date = None):
         self.df = None
         
@@ -73,7 +77,7 @@ class Stock:
         return repr(self.df)
     
     def MA(self, window = 5):
-        return self.df['Adj Close'].rolling(window, center=False).mean()
+        return self.df['Close'].rolling(window, center=False).mean()
 
     def MA_Volume(self, window = 5):
         return self.df['Volume'].rolling(window, center=False).mean()
@@ -81,7 +85,7 @@ class Stock:
     def KD(self, window = 9):
         df_min = self.df['Low'].rolling(window, center=False).min()
         df_max = self.df['High'].rolling(window, center=False).max()
-        df_RSV = (self.df['Adj Close'] - df_min) / (df_max - df_min) * 100
+        df_RSV = (self.df['Close'] - df_min) / (df_max - df_min) * 100
 
         K = []
         curr_K = 50
@@ -108,8 +112,8 @@ class Stock:
         return df_K, df_D
 
     def MACD(self, s_window = 12, l_window = 26, dif_window = 9):
-        EMA_short = self.df['Adj Close'].ewm(span=s_window).mean()
-        EMA_long = self.df['Adj Close'].ewm(span=l_window).mean()
+        EMA_short = self.df['Close'].ewm(span=s_window).mean()
+        EMA_long = self.df['Close'].ewm(span=l_window).mean()
 
         DIF = EMA_short - EMA_long
         DEM = DIF.ewm(span=dif_window).mean()
@@ -120,17 +124,60 @@ class Stock:
 
     def BIAS(self, window = 10):
         ma = self.MA(window)
-        return (self.df['Adj Close'] - ma) / ma * 100
+        return (self.df['Close'] - ma) / ma * 100
 
     def BBand(self, window = 20, band = 2):
         ma = self.MA(window)
-        stdiv = self.df['Adj Close'].rolling(window).std()
+        stdiv = self.df['Close'].rolling(window).std()
         
         top = ma + band * stdiv
         bottom = ma - band * stdiv
-        width = band * 2 * stdiv / self.df['Adj Close']
+        width = band * 2 * stdiv / self.df['Close']
         
         return top, bottom, width
     
     def getData(self, i):
         return self.df.iloc[i]
+
+    def plotOHLC(self, ax = None):
+        if(ax == None):
+            ax = plt.gca()
+
+        for i in range(self.df.index.size):
+            itrow = self.getData(i)
+            base_x = date2num(itrow.name.date())
+            base_y = itrow['Open'] if itrow['Close'] >= itrow['Open'] else itrow['Close']
+            base_color = 'r' if itrow['Close'] >= itrow['Open'] else 'g'
+
+            rect = Rectangle((base_x - .45, base_y), .9, abs(itrow['Close'] - itrow['Open']), linewidth=1, edgecolor='gray', facecolor=base_color)
+            ax.add_patch(rect)
+            
+            ax.add_line(Line2D((base_x, base_x), (itrow['High'], itrow['Low']), linewidth=1, color=base_color))
+
+        self.xaxisAutoFormat()
+        ax.autoscale()
+
+    def plotVolume(self, ax = None):
+        if(ax == None):
+            ax = plt.gca()
+
+        for i in range(self.df.index.size):
+            itrow = self.getData(i)
+            base_x = date2num(itrow.name.date())
+            base_color = 'r' if itrow['Close'] >= itrow['Open'] else 'g'
+
+            rect = Rectangle((base_x - .45, 0), .9, (itrow['Volume'] / 1000), facecolor=base_color)
+            ax.add_patch(rect)
+
+        self.xaxisAutoFormat()
+        ax.autoscale()
+    
+    def xaxisAutoFormat(self, ax = None):
+        if(ax == None):
+            ax = plt.gca()
+
+        ax.xaxis_date()
+        ax.xaxis.set_major_locator(dates.WeekdayLocator(byweekday=(1), interval=1))
+        ax.xaxis.set_major_formatter(dates.DateFormatter('%m\n%d'))
+        ax.xaxis.set_minor_locator(dates.YearLocator())
+        ax.xaxis.set_minor_formatter(dates.DateFormatter('\n\n\n%Y'))

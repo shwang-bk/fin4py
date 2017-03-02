@@ -75,20 +75,31 @@ if __name__ == '__main__':
 
 	print('歷史股價及技術線圖表')
 	print(s)
+	
 
 	# 繪製技術線型
+	# 可指定Axes，未指定則沿用上一個使用的Axes
+	fig, axes = plt.subplots(nrows=3, ncols=1, sharex=True)
 
-	s['Adj Close'].plot()
+	# 繪製K線圖
+	# s.plotOHLC()
+	s.plotOHLC(ax=axes[0])
+
+	# 繪製成交量圖(以張為單位)
+	# s.plotVolume()
+	s.plotVolume(ax=axes[1])
+
+	# 繪製其他技術線圖
+	# s['Close'].plot()
 	# ma.plot()
-	# k.plot()
-	# d.plot()
+	k.plot(ax=axes[2])
+	d.plot(ax=axes[2])
 	# dif.plot()
 	# dem.plot()
 	# osc.plot.bar()
 	# bias.plot()
-	top_line.plot()
-	bottom_line.plot()
-	# band_width.plot()
+	top_line.plot(ax=axes[0])
+	bottom_line.plot(ax=axes[0])
 
 	show()
 
