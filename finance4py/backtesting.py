@@ -33,7 +33,7 @@ from pandas import DataFrame
 from pandas import Series
 import numpy as np
 
-class BandTest:
+class BandTest(object):
     def __init__(self, stock):
         self.stock = stock
         self.df = stock.df
