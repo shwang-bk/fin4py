@@ -1,5 +1,9 @@
 股市技術分析小工具
 ======================
+[![PyPI](https://img.shields.io/badge/pipy-v0.2.2-green.svg)](https://pypi.python.org/pypi/finance4py)
+[![PyPI](https://img.shields.io/badge/license-BSD-yellowgreen.svg)](https://opensource.org/licenses/BSD-3-Clause)
+
+
 對於目前在python好像還沒找到一個適合作為股市技術分析的套件，所以決定先刻一份簡單的工具頂著用。   
 目前已新增簡易的波段回測投報率線圖，參考自[幣圖誌](http://www.bituzi.com/2014/12/Rbacktest6mins.html)
 
