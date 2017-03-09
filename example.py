@@ -35,12 +35,18 @@ from pylab import *
 if __name__ == '__main__':
 	# 建立股票資訊連結(股票代碼，起始時間，結束時間)
 	# s = Stock('2330')
-	# s = Stock('2330', '10/31/2015')
-	s = Stock('2330', '10/31/2015', '03/05/2016')
+	# s = Stock('2330', '2015-10-31')
+	s = Stock('2330', '2015-10-31', '2016-03-05')
 
 	# 取得歷史股價
 	print('歷史收盤價')
 	print(s['Adj Close'])
+
+	# 取得法人買賣超(外資、投信、自營)
+	foreignInvestor, investmentTrust, dealer = s.institutionalInvestorsBuySells()
+	s['FI'] = foreignInvestor
+	s['IT'] = investmentTrust
+	s['DE'] = dealer
 
 	# 取得均線值(預設週期為5日)
 	# ma = s.MA(5)

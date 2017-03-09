@@ -5,7 +5,8 @@
 
 
 對於目前在python好像還沒找到一個適合作為股市技術分析的套件，所以決定先刻一份簡單的工具頂著用。   
-目前已新增簡易的波段回測投報率線圖，參考自[幣圖誌](http://www.bituzi.com/2014/12/Rbacktest6mins.html)
+* 新增簡易的波段回測投報率線圖，參考自[幣圖誌](http://www.bituzi.com/2014/12/Rbacktest6mins.html)    
+* 新增取得三大法人賣賣超功能(測試)
 
 ![範例快照](example_screenshot.png)
 

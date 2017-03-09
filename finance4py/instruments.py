@@ -28,6 +28,18 @@
    IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF 
    THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
+try:
+    # Python 3
+    from urllib.request import urlopen
+    from urllib.parse import urlencode
+    from urllib.request import Request
+except ImportError:
+    # Python 2
+    from urllib import urlencode
+    from urllib2 import urlopen
+    from urllib2 import Request
+
+import json
 import datetime
 import pandas as pd
 import numpy as np
@@ -36,7 +48,9 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as dates
 
 from pandas import Series
+from pandas import DatetimeIndex
 from pandas_datareader import data as pda
+from pandas.io.json import json_normalize
 
 from matplotlib.dates import date2num
 from matplotlib.dates import num2date
@@ -46,6 +60,9 @@ from matplotlib.lines import Line2D
 class Stock(object):
     def __init__(self, stock_id, start_date = None, end_date = None):
         self.df = None
+        self.sid = stock_id
+        self.start = start_date
+        self.end = end_date
         
         try:
             self.df = pda.get_data_yahoo(stock_id + u'.TW', start_date, end_date)
@@ -75,6 +92,27 @@ class Stock(object):
 
     def __repr__(self):
         return repr(self.df)
+
+    def institutionalInvestorsBuySells(self):
+        url = "http://lpbsasia.azurewebsites.net/q"
+        values = {"stockid" : self.sid}
+        if self.start is not None:
+            values['from'] = self.start
+        if self.end is not None:
+            values['to'] = self.end
+
+        data = urlencode(values)
+        req = Request(url + "?" + data)
+        response = urlopen(req)
+        the_page = response.read()
+        response.close()
+
+        obj = json.loads(the_page)
+        datas = json_normalize(obj['datas'])
+        indexes = DatetimeIndex(datas['tardingdate'].values)
+        datas = datas.set_index(indexes)
+
+        return datas['foreignInvestor'], datas['investmentTrust'], datas['dealer']
     
     def MA(self, window = 5):
         return self.df['Close'].rolling(window, center=False).mean()
