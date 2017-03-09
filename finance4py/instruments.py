@@ -93,7 +93,7 @@ class Stock(object):
     def __repr__(self):
         return repr(self.df)
 
-    def institutionalInvestorsBuySells(self):
+    def institutionalInvestorsBuySellsTWSE(self):
         url = "http://lpbsasia.azurewebsites.net/q"
         values = {"stockid" : self.sid}
         if self.start is not None:
