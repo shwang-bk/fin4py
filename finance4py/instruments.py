@@ -109,7 +109,7 @@ class Stock(object):
 
         obj = json.loads(the_page)
         if(len(obj['datas']) == 0):
-            return None, None, None
+            return float('nan'), float('nan'), float('nan')
         datas = json_normalize(obj['datas'])
         indexes = DatetimeIndex(datas['tardingdate'].values)
         datas = datas.set_index(indexes)
