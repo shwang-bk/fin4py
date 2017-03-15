@@ -104,10 +104,12 @@ class Stock(object):
         data = urlencode(values)
         req = Request(url + "?" + data)
         response = urlopen(req)
-        the_page = response.read()
+        the_page = response.read().decode("utf-8")
         response.close()
 
         obj = json.loads(the_page)
+        if(len(obj['datas']) == 0):
+            return None, None, None
         datas = json_normalize(obj['datas'])
         indexes = DatetimeIndex(datas['tardingdate'].values)
         datas = datas.set_index(indexes)
