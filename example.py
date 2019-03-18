@@ -42,11 +42,6 @@ if __name__ == '__main__':
 	print('歷史收盤價')
 	print(s['Adj Close'])
 
-	# 取得台灣股市法人買賣超(外資、投信、自營)
-	foreignInvestor, investmentTrust, dealer = s.institutionalInvestorsBuySellsTWSE()
-	s['FI'] = foreignInvestor
-	s['IT'] = investmentTrust
-	s['DE'] = dealer
 
 	# 取得均線值(預設週期為5日)
 	# ma = s.MA(5)

@@ -92,29 +92,6 @@ class Stock(object):
 
     def __repr__(self):
         return repr(self.df)
-
-    def institutionalInvestorsBuySellsTWSE(self):
-        url = "http://lpbsasia.azurewebsites.net/q"
-        values = {"stockid" : self.sid}
-        if self.start is not None:
-            values['from'] = self.start
-        if self.end is not None:
-            values['to'] = self.end
-
-        data = urlencode(values)
-        req = Request(url + "?" + data)
-        response = urlopen(req)
-        the_page = response.read().decode("utf-8")
-        response.close()
-
-        obj = json.loads(the_page)
-        if(len(obj['datas']) == 0):
-            return float('nan'), float('nan'), float('nan')
-        datas = json_normalize(obj['datas'])
-        indexes = DatetimeIndex(datas['tardingdate'].values)
-        datas = datas.set_index(indexes)
-
-        return datas['foreignInvestor'], datas['investmentTrust'], datas['dealer']
     
     def MA(self, window = 5):
         return self.df['Close'].rolling(window, center=False).mean()
